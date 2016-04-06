@@ -1,5 +1,6 @@
 <?php
 
+use CodeProject\Models\Client;
 use Illuminate\Database\Seeder;
 
 class ClientTableSeeder extends Seeder
@@ -11,7 +12,7 @@ class ClientTableSeeder extends Seeder
      */
     public function run()
     {
-        \CodeProject\Client::truncate();
-        factory(\CodeProject\Client::class,10)->create();
+        Client::truncate();
+        factory(Client::class,10)->create();
     }
 }

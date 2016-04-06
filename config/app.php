@@ -148,13 +148,16 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
         CodeProject\Providers\AppServiceProvider::class,
         CodeProject\Providers\AuthServiceProvider::class,
         CodeProject\Providers\EventServiceProvider::class,
-        CodeProject\Providers\RouteServiceProvider::class,
+        CodeProject\Providers\RouteServiceProvider::class
+
 
     ],
 
