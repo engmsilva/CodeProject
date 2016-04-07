@@ -84,7 +84,7 @@ class ClientService
     public function show($id)
     {
         try {
-            $this->repository->find($id);
+            return $this->repository->find($id);
         } catch (\Exception $e) {
             return [
                 'error' => true,
