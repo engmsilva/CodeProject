@@ -11,9 +11,7 @@ class ProjectController extends Controller
 {
 
     private $repository;
-
     private $service;
-
 
     /**
      * ProjectController constructor.
@@ -31,7 +29,24 @@ class ProjectController extends Controller
      */
     public function index()
     {
-       return $this->repository->all();
+        return $this->repository->all();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function ownerClientAll()
+    {
+        return $this->service->ownerClientAll();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function ownerClientShow($id)    {
+
+        return $this->service->ownerClientShow($id);
     }
 
     /**
@@ -40,6 +55,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+
         return $this->service->create($request->all());
     }
 

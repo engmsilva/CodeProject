@@ -11,10 +11,7 @@ class ProjectNoteController extends Controller
 {
 
     private $repository;
-
     private $service;
-
-
     /**
      * ProjectNoteController constructor.
      * @param ProjectNoteRepository $repository

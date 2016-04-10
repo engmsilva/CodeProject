@@ -105,7 +105,12 @@ class ProjectNoteService
     public function delete($id)
     {
         try {
+            $noteTitle = $this->repository->find($id,['title']);
             $this->repository->find($id)->delete();
+            return [
+                'error' => false,
+                'menssage' => 'A anotacao '.$noteTitle['title'].' foi excluida'
+            ];
         } catch (\Exception $e) {
             return [
                 'error' => true,

@@ -92,6 +92,25 @@ class ProjectService
 
         }
     }
+
+    /**
+     * @return mixed
+     */
+    public function ownerClientAll()
+    {
+        return $this->repository->with(['owner', 'client'])->all();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function ownerClientShow($id)
+    {
+
+        return $this->repository->with(['owner', 'client'])->find($id);
+    }
+
     /**
      * @param $id
      * @return array
@@ -99,7 +118,12 @@ class ProjectService
     public function delete($id)
     {
         try {
+            $clientName = $this->repository->find($id,['name']);
             $this->repository->find($id)->delete();
+            return [
+                'error' => false,
+                'menssage' => 'O projeto '.$clientName['name'].' foi excluido'
+            ];
         } catch (\Exception $e) {
             return [
                 'error' => true,

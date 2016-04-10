@@ -27,6 +27,9 @@ Route::put('client/{id}','ClientController@update');
 Route::get('client/{id}','ClientController@show');
 Route::delete('client/{id}','ClientController@destroy');
 
+Route::get('project/owner-client','ProjectController@ownerClientAll');
+Route::get('project/{id}/owner-client','ProjectController@ownerClientShow');
+
 Route::get('project/{id}/note','ProjectNoteController@index');
 Route::post('project/{id}/note','ProjectNoteController@store');
 Route::get('project/{id}/note/{noteId}','ProjectNoteController@show');

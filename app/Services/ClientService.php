@@ -98,7 +98,12 @@ class ClientService
     public function delete($id)
     {
         try {
+            $clientName = $this->repository->find($id,['name']);
             $this->repository->find($id)->delete();
+            return [
+                'error' => false,
+                'menssage' => 'O cliente '.$clientName['name'].' foi excluido'
+            ];
         } catch (\Exception $e) {
             return [
                 'error' => true,
