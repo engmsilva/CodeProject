@@ -24,8 +24,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function project()
+    public function owners()
     {
         return$this->hasMany(Project::class);
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class,'project_members','member_id','project_id');
+    }
+
 }

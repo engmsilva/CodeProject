@@ -11,33 +11,34 @@
 |
 */
 
+Route::group(['middleware' => ['web']], function () {
 
-Route::get('/', function () {
-    return view('welcome');
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    Route::post('oauth/access_token', function() {
+
+       return Response::json(Authorizer::issueAccessToken());
+
+    });
+
+    Route::group(['middleware'=>'oauth'], function(){
+
+        Route::resource('client','ClientController', ['except' => ['create','edit']]);
+
+        Route::get('project/{id}/note','ProjectNoteController@index');
+        Route::post('project/{id}/note','ProjectNoteController@store');
+        Route::get('project/{id}/note/{noteId}','ProjectNoteController@show');
+        Route::put('project/note/{id}','ProjectNoteController@update');
+        Route::delete('project/note/{id}','ProjectNoteController@destroy');
+
+        //route::group(['middleware'=>'CheckProjectOwner'], function(){
+
+            Route::resource('project','ProjectController', ['except' => ['create','edit']]);
+
+       // });
+
+    });
+
 });
-
-Route::post('oauth/access_token', function() {
-    return Response::json(Authorizer::issueAccessToken());
-});
-
-
-Route::get('client','ClientController@index');
-Route::post('client','ClientController@store');
-Route::put('client/{id}','ClientController@update');
-Route::get('client/{id}','ClientController@show');
-Route::delete('client/{id}','ClientController@destroy');
-
-Route::get('project/owner-client','ProjectController@ownerClientAll');
-Route::get('project/{id}/owner-client','ProjectController@ownerClientShow');
-
-Route::get('project/{id}/note','ProjectNoteController@index');
-Route::post('project/{id}/note','ProjectNoteController@store');
-Route::get('project/{id}/note/{noteId}','ProjectNoteController@show');
-Route::put('project/note/{id}','ProjectNoteController@update');
-Route::delete('project/note/{id}','ProjectNoteController@destroy');
-
-Route::get('project','ProjectController@index');
-Route::post('project','ProjectController@store');
-Route::put('project/{id}','ProjectController@update');
-Route::get('project/{id}','ProjectController@show');
-Route::delete('project/{id}','ProjectController@destroy');

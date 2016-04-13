@@ -83,32 +83,13 @@ class ProjectService
     public function show($id)
     {
         try {
-            return $this->repository->find($id);
+            return $this->repository->with(['owner', 'client'])->find($id);
         } catch (\Exception $e) {
             return [
                 'error' => true,
                 'menssage' => $e->getMessage()
             ];
-
         }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function ownerClientAll()
-    {
-        return $this->repository->with(['owner', 'client'])->all();
-    }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function ownerClientShow($id)
-    {
-
-        return $this->repository->with(['owner', 'client'])->find($id);
     }
 
     /**
@@ -132,4 +113,6 @@ class ProjectService
 
         }
     }
+
+
 }

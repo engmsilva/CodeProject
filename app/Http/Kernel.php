@@ -30,6 +30,7 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
 
+
         ],
 
         'api' => [
@@ -55,5 +56,6 @@ class Kernel extends HttpKernel
         'oauth-user' => \LucaDegasperi\OAuth2Server\Middleware\OAuthUserOwnerMiddleware::class,
         'oauth-client' => \LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,
         'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
+        'CheckProjectOwner' => \CodeProject\Http\Middleware\CheckProjectOwner::class,
     ];
 }

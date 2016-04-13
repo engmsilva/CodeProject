@@ -1,8 +1,5 @@
 <?php
 
-use CodeProject\Entities\Client;
-use CodeProject\Entities\Project;
-use CodeProject\Entities\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientTableSeeder::class);
         $this->call(ProjectTableSeeder::class);
         $this->call(ProjectNoteTableSeeder::class);
+        $this->call(OAuthClientsTableSeeder::class);
     }
 }
