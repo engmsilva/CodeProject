@@ -29,13 +29,23 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::get('project/{id}/note','ProjectNoteController@index');
         Route::post('project/{id}/note','ProjectNoteController@store');
-        Route::get('project/{id}/note/{noteId}','ProjectNoteController@show');
-        Route::put('project/note/{id}','ProjectNoteController@update');
-        Route::delete('project/note/{id}','ProjectNoteController@destroy');
+        Route::get('project/{id}/note/{idNote}','ProjectNoteController@show');
+        Route::put('project/{id}/note/{idNote}','ProjectNoteController@update');
+        Route::delete('project/{id}/note/{idNote}','ProjectNoteController@destroy');
+
+        Route::get('project/{id}/members','ProjectController@members');
+        Route::post('project/{id}/member/{idUser}','ProjectController@addMember');
+        Route::delete('project/{id}/member/{idUser}','ProjectController@removeMember');
+
+        Route::get('project/{id}/task','ProjectTaskController@index');
+        Route::post('project/{id}/task','ProjectTaskController@store');
+        Route::put('project/{id}/task/{idTask}','ProjectTaskController@update');
+        Route::get('project/{id}/task/{idTask}','ProjectTaskController@show');
+        Route::delete('project/{id}/task/{idTask}','ProjectTaskController@destroy');
 
         //route::group(['middleware'=>'CheckProjectOwner'], function(){
 
-            Route::resource('project','ProjectController', ['except' => ['create','edit']]);
+        Route::resource('project','ProjectController', ['except' => ['create','edit']]);
 
        // });
 

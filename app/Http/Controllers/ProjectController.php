@@ -2,7 +2,6 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Entities\User;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Services\ProjectService;
 use Illuminate\Http\Request;
@@ -51,15 +50,28 @@ class ProjectController extends Controller
        return $this->repository->with(['owner', 'client'])->findWhere(['owner_id' => $this->authorizer->getResourceOwnerId()]);
     }
 
+    public function members($id)
+    {
+        $project = $this->repository->find($id);
+        return $project->members;
+    }
+
+    public function addMember($id, $idUser)
+    {
+        return $this->service->addMember(['project_id'=>$id,'member_id' => $idUser]);
+    }
+
+    public function removeMember($idUser)
+    {
+        return $this->service->removeMember($idUser);
+    }
     /**
      * @param Request $request
      * @return mixed
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request)    {
 
-        return $this->service->create($request->all());
-    }
+        return $this->service->create($request->all());    }
 
     /**
      * @param Request $request

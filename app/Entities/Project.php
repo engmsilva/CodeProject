@@ -28,6 +28,11 @@ class Project extends Model implements Transformable
         return$this->hasMany(ProjectNote::class);
     }
 
+    public function tasks()
+    {
+        return$this->hasMany(ProjectTask::class);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -47,6 +52,11 @@ class Project extends Model implements Transformable
     public function members()
     {
         return $this->belongsToMany(User::class,'project_members','project_id','member_id');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(ProjectFile::class);
     }
 
 }

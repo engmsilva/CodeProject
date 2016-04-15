@@ -8,35 +8,32 @@
 
 namespace CodeProject\Services;
 
-
-use CodeProject\Entities\ProjectMember;
-use CodeProject\Repositories\ProjectMemberRepository;
-use CodeProject\Repositories\ProjectRepository;
+use CodeProject\Repositories\ProjectTaskRepository;
+use CodeProject\Validators\ProjectTaskValidator;
 use CodeProject\Validators\ProjectValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
 
-class ProjectService
+class ProjectTaskService
 {
 
-    private $repository;
-    private $validator;
+
     /**
-     * @var ProjectMemberRepository
+     * @var ProjectTaskRepository
      */
-    private $memberRepository;
+    private $repository;
+    /**
+     * @var ProjectTaskValidator
+     */
+    private $validator;
 
-    public function __construct(ProjectRepository $repository, ProjectValidator $validator, ProjectMemberRepository $memberRepository)
+    public function __construct(ProjectTaskRepository $repository, ProjectTaskValidator $validator )
     {
-        $this->repository = $repository;
-        $this->validator = $validator;
 
-        $this->memberRepository = $memberRepository;
+        $this->repository = $repository;
+
+        $this->validator = $validator;
     }
 
-    /**
-     * @param array $data
-     * @return array|mixed
-     */
     public function create(array $data)
     {
         try {
@@ -51,36 +48,9 @@ class ProjectService
         }
     }
 
-    public function addMember(array $data)
-    {
-        return $this->memberRepository->create($data);
-    }
-
-    public function removeMember($idUser)
-    {
-        try
-        {
-            $member = $this->memberRepository->find($idUser);
-            $this->memberRepository->find($member->id)->delete();
-            return [
-                'error' => false,
-                'menssage' => 'O membro foi excluido'
-            ];
-        }catch (\Exception $e) {
-            return [
-                'error' => true,
-                'menssage' => $e->getMessage()
-            ];
-        }
-    }
-
-    /**
-     * @param array $data
-     * @param $id
-     * @return array|mixed
-     */
     public function update(array $data, $id)
     {
+
         try {
 
         try {
@@ -102,34 +72,28 @@ class ProjectService
             ];
         }
     }
-    /**
-     * @param $id
-     * @return array|mixed
-     */
-    public function show($id)
+
+    public function show($id, $taskId)
     {
         try {
-            return $this->repository->with(['owner', 'client'])->find($id);
+            return $this->repository->findWhere(['project_id'=>$id, 'id'=>$taskId]);
         } catch (\Exception $e) {
             return [
                 'error' => true,
                 'menssage' => $e->getMessage()
             ];
+
         }
     }
 
-    /**
-     * @param $id
-     * @return array
-     */
     public function delete($id)
     {
         try {
-            $clientName = $this->repository->find($id);
+            $taskName = $this->repository->find($id);
             $this->repository->find($id)->delete();
             return [
                 'error' => false,
-                'menssage' => 'O projeto '.$clientName->name.' foi excluido'
+                'menssage' => 'A tarefa '.$taskName->name.' foi excluida'
             ];
         } catch (\Exception $e) {
             return [
@@ -139,6 +103,4 @@ class ProjectService
 
         }
     }
-
-
 }
