@@ -12,21 +12,16 @@ use CodeProject\Entities\ProjectTask;
 class ProjectTaskTransformer extends TransformerAbstract
 {
 
-    /**
-     * Transform the \ProjectTask entity
-     * @param \ProjectTask $model
-     *
-     * @return array
-     */
-    public function transform(ProjectTask $model)
+
+    public function transform(ProjectTask $task)
     {
         return [
-            'id'         => (int) $model->id,
-
-            /* place your other model properties here */
-
-            'created_at' => $model->created_at,
-            'updated_at' => $model->updated_at
+            'id' => $task->id,
+            'name' => $task->name,
+            'project_id' => $task->project_id,
+            'start_date' => $task->start_date,
+            'due_date' => $task->due_date,
+            'status' => $task->status,
         ];
     }
 }

@@ -9,11 +9,13 @@
 namespace CodeProject\Services;
 
 
-use CodeProject\Entities\ProjectMember;
 use CodeProject\Repositories\ProjectMemberRepository;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
+
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Factory as Storage;
 
 class ProjectService
 {
@@ -24,13 +26,28 @@ class ProjectService
      * @var ProjectMemberRepository
      */
     private $memberRepository;
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+    /**
+     * @var Storage
+     */
+    private $storage;
 
-    public function __construct(ProjectRepository $repository, ProjectValidator $validator, ProjectMemberRepository $memberRepository)
+    public function __construct(
+        ProjectRepository $repository,
+        ProjectValidator $validator,
+        ProjectMemberRepository $memberRepository,
+        Filesystem $filesystem,
+        Storage $storage
+    )
     {
         $this->repository = $repository;
         $this->validator = $validator;
-
         $this->memberRepository = $memberRepository;
+        $this->filesystem = $filesystem;
+        $this->storage = $storage;
     }
 
     /**
@@ -47,13 +64,21 @@ class ProjectService
                 'error' => true,
                 'menssage' => $e->getMessageBag()
             ];
-
         }
     }
 
     public function addMember(array $data)
     {
-        return $this->memberRepository->create($data);
+        try
+        {
+            return $this->memberRepository->create($data);
+
+        }catch (\Exception $e) {
+            return [
+                'error' => true,
+                'menssage' => $e->getMessage()
+            ];
+        }
     }
 
     public function removeMember($idUser)
@@ -130,6 +155,48 @@ class ProjectService
             return [
                 'error' => false,
                 'menssage' => 'O projeto '.$clientName->name.' foi excluido'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'menssage' => $e->getMessage()
+            ];
+
+        }
+    }
+
+    public function createFile(array $data)
+    {
+        try {
+            $project =$this->repository->skipPresenter()->find($data['project_id']);
+            $projectFile = $project->files()->create($data);
+            $this->storage->put($projectFile->id . "-" . $projectFile->name . "." . $data['extension'], $this->filesystem->get($data['file']));
+            return [
+                'error' => false,
+                'menssage' => 'O upload do arquivo '.$projectFile->id . "-" . $projectFile->name . "." . $data['extension'].' foi feito com sucesso.'
+            ];
+
+        }catch(\Exception $e){
+            return [
+                'error' => true,
+                'menssage' => $e->getMessage()
+            ];
+        }
+
+    }
+
+    public function deleteFile($id, $idFile)
+    {
+        try {
+
+            $project = $this->repository->skipPresenter()->find($id);
+            $projectFile = $project->files()->find($idFile);
+            $project->files()->find($idFile)->delete();
+            $this->storage->delete($projectFile->id . "-" . $projectFile->name . "." . $projectFile->extension);
+
+            return [
+                'error' => false,
+                'menssage' => 'O arquivo '.$projectFile->id . "-" . $projectFile->name . "." . $projectFile->extension.' foi deletado.'
             ];
         } catch (\Exception $e) {
             return [

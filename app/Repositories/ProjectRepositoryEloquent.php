@@ -5,9 +5,7 @@ namespace CodeProject\Repositories;
 use CodeProject\Presenters\ProjectPresenter;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Entities\Project;
-use CodeProject\Validators\ProjectValidator;;
 
 /**
  * Class ProjectRepositoryEloquent
@@ -33,35 +31,22 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
-    public function isOwner($projectId, $userId)
+    /**
+     * @return mixed
+     */
+    public function presenter()
     {
-
-        if(count($this->findWhere(['id' => $projectId, 'owner_id' => $userId])))
-        {
-            return true;
-        }
-
-        return false;
+        return ProjectPresenter::class;
     }
 
-    public function hasMember($projectId, $memberId)
+    public function isOwnerMember($userId)
     {
-
-        $project = $this->find($projectId);
-
-        foreach($project->members as $member)
-        {
-            if($member->id == $memberId)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->scopeQuery(function ($query) use ($userId){
+            return $query->select('projects.*')
+                ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')
+                ->where('project_members.member_id', '=', $userId)
+                ->union($this->model->query()->getQuery()->where('owner_id', '=', $userId));
+        });
     }
 
-   // public function presenter()
-   // {
-   //     return ProjectPresenter::class;
-   // }
 }

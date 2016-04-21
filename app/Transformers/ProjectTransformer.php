@@ -20,6 +20,7 @@ class ProjectTransformer extends TransformerAbstract
     {
         return [
             'project_id' => $project->id,
+            'owner' => $project->owner_id,
             'project' => $project->name,
             'description' => $project->description,
             'progress' => $project->progress,

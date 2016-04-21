@@ -15,8 +15,6 @@ use Prettus\Validator\Exceptions\ValidatorException;
 
 class ProjectTaskService
 {
-
-
     /**
      * @var ProjectTaskRepository
      */

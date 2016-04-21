@@ -37,7 +37,7 @@ class CheckProjectOwner
         $userId =  $this->authorizer->getResourceOwnerId();
         $projectId = $request->project;
 
-        if($isOwner = $this->repository->isOwner($projectId, $userId) == false)
+        if($this->repository->isOwner($projectId, $userId) == false)
         {
             return response([
                 'error' => true,

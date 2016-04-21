@@ -12,7 +12,6 @@ use CodeProject\Entities\User;
 
 use League\Fractal\TransformerAbstract;
 
-
 class ProjectmemberTransformer extends TransformerAbstract
 {
     public function Transform(User $member)
@@ -20,6 +19,7 @@ class ProjectmemberTransformer extends TransformerAbstract
         return [
             'member_id' => $member->id,
             'name' => $member->name,
+            'email' => $member->email,
         ];
     }
 }

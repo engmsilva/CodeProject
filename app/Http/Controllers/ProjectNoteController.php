@@ -2,6 +2,7 @@
 
 namespace CodeProject\Http\Controllers;
 
+use CodeProject\Http\Controllers\Auth\AuthCodeProject;
 use CodeProject\Repositories\ProjectNoteRepository;
 use CodeProject\Services\ProjectNoteService;
 use Illuminate\Http\Request;
@@ -13,14 +14,22 @@ class ProjectNoteController extends Controller
     private $repository;
     private $service;
     /**
+     * @var AuthCodeProject
+     */
+    private $authCodeProject;
+
+    /**
      * ProjectNoteController constructor.
      * @param ProjectNoteRepository $repository
      * @param ProjectNoteService $service
      */
-    public function __construct(ProjectNoteRepository $repository, ProjectNoteService $service)
+    public function __construct(ProjectNoteRepository $repository,
+                                ProjectNoteService $service,
+                                AuthCodeProject $authCodeProject)
     {
         $this->repository = $repository;
         $this->service = $service;
+        $this->authCodeProject = $authCodeProject;
     }
 
     /**
@@ -28,7 +37,10 @@ class ProjectNoteController extends Controller
      */
     public function index($id)
     {
-       return $this->repository->findWhere(['project_id'=>$id]);
+        if($this->authCodeProject->checkProjectPermissions($id)==false) {
+            return ['erro' => 'Access Forbidden'];
+        }
+        return $this->repository->findWhere(['project_id'=>$id]);
     }
 
     /**
@@ -37,6 +49,11 @@ class ProjectNoteController extends Controller
      */
     public function store(Request $request)
     {
+        $request['project_id'] = $request->id;
+
+        if($this->authCodeProject->checkProjectPermissions($request['project_id'])==false) {
+            return ['erro' => 'Access Forbidden'];
+        }
         return $this->service->create($request->all());
     }
 
@@ -47,10 +64,13 @@ class ProjectNoteController extends Controller
      * @return mixed
      * @internal param $id
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $idNote)
     {
-
-        return $this->service->update($request->all(), $id);
+        $request['project_id'] = $id;
+        if($this->authCodeProject->checkProjectPermissions($id)==false) {
+            return ['erro' => 'Access Forbidden'];
+        }
+        return $this->service->update($request->all(), $idNote);
     }
 
     /**
@@ -60,6 +80,9 @@ class ProjectNoteController extends Controller
      */
     public function show($id, $noteId)
     {
+        if($this->authCodeProject->checkProjectPermissions($id)==false) {
+            return ['erro' => 'Access Forbidden'];
+        }
         return $this->service->show($id, $noteId);
     }
 
@@ -68,8 +91,11 @@ class ProjectNoteController extends Controller
      * @param $noteId
      * @return mixed
      */
-    public function destroy($id)    {
+    public function destroy($id, $idNote)    {
 
-        return $this->service->delete($id);
+        if($this->authCodeProject->checkProjectPermissions($id)==false) {
+            return ['erro' => 'Access Forbidden'];
+        }
+        return $this->service->delete($idNote);
     }
 }
