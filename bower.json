@@ -1,0 +1,28 @@
+{
+  "name": "codeproject-frontend",
+  "description": "implementacao do front end da aplicacao com AngularJS",
+  "main": "",
+  "authors": [
+    "Marcelo Ribeiro <eng.msilva@yahoo.com.br>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "resources/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.5.5",
+    "angular-route": "1.5.5",
+    "angular-resource": "1.5.5",
+    "angular-animate": "1.5.5",
+    "angular-messages": "1.5.5",
+    "angular-bootstrap": "0.13.0",
+    "angular-strap": "^2.3.8",
+    "bootstrap": "^3.3.6"
+  }
+}
