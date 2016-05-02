@@ -63,7 +63,7 @@ class ClientService
 
         try {
             $this->validator->with($data)->passesOrFail();
-            return $this->repository->update($data, $id);
+            return $this->repository->skipPresenter()->update($data, $id);
 
         } catch (ValidatorException $e) {
 

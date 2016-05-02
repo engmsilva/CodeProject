@@ -44,7 +44,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::delete('project/{id}/task/{idTask}','ProjectTaskController@destroy');
 
         Route::post('project/{id}/file','ProjectFileController@store');
-        Route::post('project/{id}/file/{idFile}','ProjectFileController@destroy');
+        Route::delete('project/{id}/file/{idFile}','ProjectFileController@destroy');
 
         //route::group(['middleware'=>'CheckProjectOwner'], function(){
 
