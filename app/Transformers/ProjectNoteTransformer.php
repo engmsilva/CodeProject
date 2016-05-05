@@ -17,7 +17,7 @@ class ProjectNoteTransformer extends TransformerAbstract
     {
         return [
             'id' => $note->project_id,
-            'idNote' => $note->id,            
+            'idNote' => $note->id,
             'title' => $note->title,
             'note' => $note->note
         ];

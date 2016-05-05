@@ -62,6 +62,26 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
            templateUrl: 'build/views/client/remove.html',
            controller: 'ClientRemoveController'
        })
+        .when('/projects', {
+            requireLogin: false,
+            templateUrl: 'build/views/project/list.html',
+            controller: 'ProjectListController'
+        })
+        .when('/projects/new', {
+            requireLogin: false,
+            templateUrl: 'build/views/project/new.html',
+            controller: 'ProjectNewController'
+        })
+        .when('/projects/:id/edit', {
+            requireLogin: false,
+            templateUrl: 'build/views/project/edit.html',
+            controller: 'ProjectEditController'
+        })
+        .when('/projects/:id/remove', {
+            requireLogin: false,
+            templateUrl: 'build/views/project/remove.html',
+            controller: 'ProjectRemoveController'
+        })
         .when('/project/:id/notes', {
             requireLogin: false,
             templateUrl: 'build/views/project-note/list.html',
