@@ -7,5 +7,10 @@ angular.module('app.controllers')
            $scope.client.$delete().then(function () {
               $location.path('/clients');
            });
-        }
+        };
+
+        $scope.cancel = function () {
+            $location.path('/clients');
+        };
+
     }]);

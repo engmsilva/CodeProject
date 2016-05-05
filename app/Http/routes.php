@@ -46,6 +46,8 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('project/{id}/file','ProjectFileController@store');
         Route::delete('project/{id}/file/{idFile}','ProjectFileController@destroy');
 
+        Route::get('user/authenticated','UserController@authenticated');
+
         //route::group(['middleware'=>'CheckProjectOwner'], function(){
 
         Route::resource('project','ProjectController', ['except' => ['create','edit']]);

@@ -7,8 +7,11 @@
 	<title>Code Project</title>
 
 	@if(Config::get('app.debug'))
-		<link rel="stylesheet" href="{{asset('build/css/vendor/bootstrap.min.css')}}">
-		<link rel="stylesheet" href="{{asset('build/css/vendor/bootstrap-theme.min.css')}}">
+		<link rel="stylesheet" href="{{asset('build/css/app.css')}}">
+		<link rel="stylesheet" href="{{asset('build/css/components.css')}}">
+		<link rel="stylesheet" href="{{asset('build/css/flaticon.css')}}">
+		<link rel="stylesheet" href="{{asset('build/css/font-awesome.css')}}">
+
 	@else
 		<link rel="stylesheet" href="{{elixir('css/all.css')}}">
 	@endif
@@ -87,13 +90,22 @@
 		<script src="{{asset('build/js/app.js')}}"></script>
 		<script src="{{asset('build/js/controllers/login.js')}}"></script>
 		<script src="{{asset('build/js/controllers/home.js')}}"></script>
+
 		<script src="{{asset('build/js/controllers/client/clientList.js')}}"></script>
 		<script src="{{asset('build/js/controllers/client/clientNew.js')}}"></script>
 		<script src="{{asset('build/js/controllers/client/clientEdit.js')}}"></script>
 		<script src="{{asset('build/js/controllers/client/clientRemove.js')}}"></script>
 
+		<script src="{{asset('build/js/controllers/project-note/projectNoteList.js')}}"></script>
+	    <script src="{{asset('build/js/controllers/project-note/projectNoteShow.js')}}"></script>
+		<script src="{{asset('build/js/controllers/project-note/projectNoteNew.js')}}"></script>
+		<script src="{{asset('build/js/controllers/project-note/projectNoteEdit.js')}}"></script>
+		<script src="{{asset('build/js/controllers/project-note/projectNoteRemove.js')}}"></script>
+
 		<!-- SERVICES -->
 		<script src="{{asset('build/js/services/client.js')}}"></script>
+		<script src="{{asset('build/js/services/projectNote.js')}}"></script>
+		<script src="{{asset('build/js/services/user.js')}}"></script>
 
 	@else
 		<script src="{{elixir('js/all.js')}}"></script>

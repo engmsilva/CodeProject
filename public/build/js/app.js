@@ -16,9 +16,22 @@ app.provider('appConfig',function(){
     }
 });
 
-app.config(['$routeProvider','OAuthProvider','OAuthTokenProvider','appConfigProvider',
-    function($routeProvider, OAuthProvider, OAuthTokenProvider, appConfigProvider){
-   $routeProvider
+app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider','appConfigProvider',
+    function($routeProvider, $httpProvider, OAuthProvider, OAuthTokenProvider, appConfigProvider){
+        $httpProvider.defaults.transformResponse = function (data,headers) {
+            var headersGetter = headers();
+            if(headersGetter['content-type'] == 'application/json' ||
+                headersGetter['content-type'] == 'text/json'){
+                var dataJson = JSON.parse(data);
+                if(dataJson.hasOwnProperty('data') && Object.keys(dataJson).length == 1){
+                    dataJson = dataJson.data;
+                }
+                    return dataJson;
+                }
+            return data;
+        };
+        
+        $routeProvider
        .when('/login',{
            requireLogin: false,
            templateUrl: 'build/views/login.html',
@@ -49,11 +62,31 @@ app.config(['$routeProvider','OAuthProvider','OAuthTokenProvider','appConfigProv
            templateUrl: 'build/views/client/remove.html',
            controller: 'ClientRemoveController'
        })
-       .otherwise({redirectTo: function () {
-           return '/login';
-       }
-          
-       });
+        .when('/project/:id/notes', {
+            requireLogin: false,
+            templateUrl: 'build/views/project-note/list.html',
+            controller: 'ProjectNoteListController'
+        })
+        .when('/project/:id/notes/:idNote/show', {
+            requireLogin: false,
+            templateUrl: 'build/views/project-note/show.html',
+            controller: 'ProjectNoteShowController'
+        })
+        .when('/project/:id/notes/new', {
+            requireLogin: false,
+            templateUrl: 'build/views/project-note/new.html',
+            controller: 'ProjectNoteNewController'
+        })
+        .when('/project/:id/notes/:idNote/edit', {
+            requireLogin: false,
+            templateUrl: 'build/views/project-note/edit.html',
+            controller: 'ProjectNoteEditController'
+        })
+        .when('/project/:id/notes/:idNote/remove', {
+            requireLogin: false,
+            templateUrl: 'build/views/project-note/remove.html',
+            controller: 'ProjectNoteRemoveController'
+        });
 
 
     OAuthProvider

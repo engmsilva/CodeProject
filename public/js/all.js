@@ -546,31 +546,40 @@ app.config(['$routeProvider','OAuthProvider','OAuthTokenProvider','appConfigProv
     function($routeProvider, OAuthProvider, OAuthTokenProvider, appConfigProvider){
    $routeProvider
        .when('/login',{
+           requireLogin: false,
            templateUrl: 'build/views/login.html',
            controller: 'LoginController'
        })
        .when('/home', {
-           requireLogin: false,
+           requireLogin: true,
            templateUrl: 'build/views/home.html',
            controller: 'HomeController'
        })
        .when('/clients',{
+           requireLogin: true,
            templateUrl: 'build/views/client/list.html',
            controller: 'ClientListController'
        })
        .when('/clients/new', {
+           requireLogin: true,
            templateUrl: 'build/views/client/new.html',
            controller: 'ClientNewController'
        })
        .when('/clients/:id/edit', {
+           requireLogin: true,
            templateUrl: 'build/views/client/edit.html',
            controller: 'ClientEditController'
        })
        .when('/clients/:id/remove', {
+           requireLogin: true,
            templateUrl: 'build/views/client/remove.html',
            controller: 'ClientRemoveController'
        })
-       .otherwise({redirect:'/login'});
+       .otherwise({redirectTo: function () {
+           return '/login';
+       }
+          
+       });
 
 
     OAuthProvider
@@ -590,7 +599,7 @@ app.config(['$routeProvider','OAuthProvider','OAuthTokenProvider','appConfigProv
         });
 }]);
 
-app.run(['$rootScope', '$window','$route','$location', 'OAuth', function($rootScope,$route,$location, $window, OAuth) {
+app.run(['$rootScope','$window','$route','$location','OAuth', function($rootScope,$window,$route,$location,OAuth) {
     $rootScope.$on('oauth:error', function(event, rejection) {
         // Ignore `invalid_grant` error - should be catched on `LoginController`.
         if ('invalid_grant' === rejection.data.error) {
@@ -603,23 +612,28 @@ app.run(['$rootScope', '$window','$route','$location', 'OAuth', function($rootSc
         }
 
         // Redirect to `/login` with the `error_reason`.
-       return $window.location.href = '/login?error_reason=' + rejection.data.error;
-
-
+        $location.path('/login');
+        console.log(rejection.data.error);
+       //return $window.location.href = '/login?error_reason=' + rejection.data.error;
     });
-    console.log(OAuth.isAuthenticated());
+
+    $rootScope.$on('$routeChangeStart', function(ev, next, current) {
+
+        var requireLogin = next.requireLogin;
+
+        if(requireLogin) { //
+            if(!OAuth.isAuthenticated()){
+               $location.path('/login');
+                console.log('Acesso Negado!');
+            }
+        }
+    });
+    
+
 }]);
 angular.module('app.controllers')
     .controller('HomeController', ['$scope','$route','$location','OAuth', function($scope,$route,$location,OAuth){
-
-     //console.log(OAuth.isAuthenticated());
-     //console.log($route.current.requireLogin);
-      // if($route.current.requireLogin){
-     //      if(!OAuth.isAuthenticated()){
-      //         $location.path('/login');
-      //     }
-     // }
-
+        
     }]);
 angular.module('app.controllers')
     .controller('LoginController', ['$scope','$location','OAuth', function($scope,$location,OAuth){

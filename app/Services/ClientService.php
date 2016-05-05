@@ -63,7 +63,7 @@ class ClientService
 
         try {
             $this->validator->with($data)->passesOrFail();
-            return $this->repository->skipPresenter()->update($data, $id);
+            return $this->repository->update($data, $id);
 
         } catch (ValidatorException $e) {
 
@@ -98,7 +98,7 @@ class ClientService
     public function delete($id)
     {
         try {
-            $clientName = $this->repository->find($id,['name']);
+            $clientName = $this->repository->skipPresenter()->find($id,['name']);
             $this->repository->find($id)->delete();
             return [
                 'error' => false,

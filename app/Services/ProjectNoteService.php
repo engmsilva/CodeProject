@@ -105,7 +105,7 @@ class ProjectNoteService
     public function delete($id)
     {
         try {
-            $noteTitle = $this->repository->find($id,['title']);
+            $noteTitle = $this->repository->skipPresenter()->find($id,['title']);
             $this->repository->find($id)->delete();
             return [
                 'error' => false,

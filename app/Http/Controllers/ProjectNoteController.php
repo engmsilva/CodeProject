@@ -40,7 +40,10 @@ class ProjectNoteController extends Controller
         if($this->authCodeProject->checkProjectPermissions($id)==false) {
             return ['erro' => 'Access Forbidden'];
         }
-        return $this->repository->findWhere(['project_id'=>$id]);
+        
+        return  $this->repository->findWhere(['project_id'=>$id]);
+
+
     }
 
     /**
@@ -83,7 +86,15 @@ class ProjectNoteController extends Controller
         if($this->authCodeProject->checkProjectPermissions($id)==false) {
             return ['erro' => 'Access Forbidden'];
         }
-        return $this->service->show($id, $noteId);
+       $result = $this->service->show($id, $noteId);
+        if(isset($result['data']) && count($result['data'])==1){
+            $result = [
+                'data' => $result['data'][0]
+            ];
+        }
+
+        return $result;
+
     }
 
     /**
