@@ -150,7 +150,7 @@ class ProjectService
     public function delete($id)
     {
         try {
-            $clientName = $this->repository->find($id);
+            $clientName = $this->repository->skipPresenter()->find($id);
             $this->repository->find($id)->delete();
             return [
                 'error' => false,
