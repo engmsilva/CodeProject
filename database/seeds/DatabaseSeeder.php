@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProjectNoteTableSeeder::class);
         $this->call(OAuthClientsTableSeeder::class);
         $this->call(ProjectTaskTableSeeder::class);
-        $this->call(ProjectMemberTableSeeder::class);
+       // $this->call(ProjectMemberTableSeeder::class);
     }
 }

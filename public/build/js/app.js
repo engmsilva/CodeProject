@@ -1,5 +1,6 @@
 var app = angular.module(
-    'app',['ngRoute','angular-oauth2','app.controllers','app.services','app.filters'
+    'app',['ngRoute','angular-oauth2','app.controllers','app.services','app.filters',
+            'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker',
     ]);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
@@ -19,7 +20,7 @@ app.provider('appConfig',['$httpParamSerializerProvider' ,function($httpParamSer
         utils: {
             transformRequest: function (data) {
                 if(angular.isObject(data)){
-                    $httpParamSerializerProvider.get()(data);
+                   return $httpParamSerializerProvider.$get()(data);
                 }
                 return data;
             },
