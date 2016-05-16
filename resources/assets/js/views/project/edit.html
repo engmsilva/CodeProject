@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    Editar Projeto
+                <div class="panel-heading" >
+                    <b>Editar Projeto</b>
                 </div>
                 <div class="panel-body">
 
@@ -51,16 +51,18 @@
                         <div class="form-group" ng-class="{'has-error': !form.due_date.$valid && form.due_date.$touched}">
                             <label class="col-md-4 control-label">Due Date</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="due_date"
-                                       datepicker-popup="dd/MM/yyyy"
-                                       ng-model="project.due_date"
-                                       is-open="due_date.status.opened" close-test="Close"
-                                       required/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="open($even)">
-                                        <i class="glyphicon glyphicon-calendar"></i>
-                                    </button>
-                                </span>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="due_date"
+                                           datepicker-popup="dd/MM/yyyy"
+                                           ng-model="project.due_date"
+                                           is-open="due_date.status.opened" close-test="Close"
+                                           required/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($even)">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
                                 <div ng-messages="form.due_date.$error" class="help-block" ng-show="form.due_date.$touched">
                                     <div ng-message="required">Campo obrigatório*</div>
                                     <div ng-message="date">Data inválida</div>

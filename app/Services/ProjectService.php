@@ -163,49 +163,7 @@ class ProjectService
             ];
 
         }
-    }
-
-    public function createFile(array $data)
-    {
-        try {
-            $project =$this->repository->skipPresenter()->find($data['project_id']);
-            $projectFile = $project->files()->create($data);
-            $this->storage->put($projectFile->id . "-" . $projectFile->name . "." . $data['extension'], $this->filesystem->get($data['file']));
-            return [
-                'error' => false,
-                'menssage' => 'O upload do arquivo '.$projectFile->id . "-" . $projectFile->name . "." . $data['extension'].' foi feito com sucesso.'
-            ];
-
-        }catch(\Exception $e){
-            return [
-                'error' => true,
-                'menssage' => $e->getMessage()
-            ];
-        }
-
-    }
-
-    public function deleteFile($id, $idFile)
-    {
-        try {
-
-            $project = $this->repository->skipPresenter()->find($id);
-            $projectFile = $project->files()->find($idFile);
-            $project->files()->find($idFile)->delete();
-            $this->storage->delete($projectFile->id . "-" . $projectFile->name . "." . $projectFile->extension);
-
-            return [
-                'error' => false,
-                'menssage' => 'O arquivo '.$projectFile->id . "-" . $projectFile->name . "." . $projectFile->extension.' foi deletado.'
-            ];
-        } catch (\Exception $e) {
-            return [
-                'error' => true,
-                'menssage' => $e->getMessage()
-            ];
-
-        }
-    }
+    } 
 
 
 }

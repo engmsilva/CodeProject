@@ -1,10 +1,11 @@
 var app = angular.module(
-    'app',['ngRoute','angular-oauth2','app.controllers','app.services','app.filters',
-            'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker',
+    'app',['ngRoute','angular-oauth2','app.controllers','app.services','app.filters','app.directives',
+            'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ngFileUpload'
     ]);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
 angular.module('app.filters',[]);
+angular.module('app.directives',[]);
 angular.module('app.services',['ngResource']);
 
 app.provider('appConfig',['$httpParamSerializerProvider' ,function($httpParamSerializerProvider){
@@ -16,6 +17,9 @@ app.provider('appConfig',['$httpParamSerializerProvider' ,function($httpParamSer
                 {value: 2, label: 'Iniciado'},
                 {value: 3, label: 'Concluído'}
             ]
+        },
+        urls: {
+            projectFile: '/project/{{id}}/file/{{idFile}}'
         },
         utils: {
             transformRequest: function (data) {
@@ -69,26 +73,26 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
            templateUrl: 'build/views/home.html',
            controller: 'HomeController'
        })
-       .when('/clients',{
-           requireLogin: true,
-           templateUrl: 'build/views/client/list.html',
-           controller: 'ClientListController'
-       })
-       .when('/clients/new', {
-           requireLogin: true,
-           templateUrl: 'build/views/client/new.html',
-           controller: 'ClientNewController'
-       })
-       .when('/clients/:id/edit', {
-           requireLogin: true,
-           templateUrl: 'build/views/client/edit.html',
-           controller: 'ClientEditController'
-       })
-       .when('/clients/:id/remove', {
-           requireLogin: true,
-           templateUrl: 'build/views/client/remove.html',
-           controller: 'ClientRemoveController'
-       })
+           .when('/clients',{
+               requireLogin: true,
+               templateUrl: 'build/views/client/list.html',
+               controller: 'ClientListController'
+           })
+           .when('/clients/new', {
+               requireLogin: true,
+               templateUrl: 'build/views/client/new.html',
+               controller: 'ClientNewController'
+           })
+           .when('/clients/:id/edit', {
+               requireLogin: true,
+               templateUrl: 'build/views/client/edit.html',
+               controller: 'ClientEditController'
+           })
+           .when('/clients/:id/remove', {
+               requireLogin: true,
+               templateUrl: 'build/views/client/remove.html',
+               controller: 'ClientRemoveController'
+           })
         .when('/projects', {
             requireLogin: false,
             templateUrl: 'build/views/project/list.html',
@@ -109,30 +113,50 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
             templateUrl: 'build/views/project/remove.html',
             controller: 'ProjectRemoveController'
         })
-        .when('/project/:id/notes', {
-            requireLogin: false,
-            templateUrl: 'build/views/project-note/list.html',
-            controller: 'ProjectNoteListController'
+            .when('/project/:id/notes', {
+                requireLogin: false,
+                templateUrl: 'build/views/project-note/list.html',
+                controller: 'ProjectNoteListController'
+            })
+            .when('/project/:id/notes/:idNote/show', {
+                requireLogin: false,
+                templateUrl: 'build/views/project-note/show.html',
+                controller: 'ProjectNoteShowController'
+            })
+            .when('/project/:id/notes/new', {
+                requireLogin: false,
+                templateUrl: 'build/views/project-note/new.html',
+                controller: 'ProjectNoteNewController'
+            })
+            .when('/project/:id/notes/:idNote/edit', {
+                requireLogin: false,
+                templateUrl: 'build/views/project-note/edit.html',
+                controller: 'ProjectNoteEditController'
+            })
+            .when('/project/:id/notes/:idNote/remove', {
+                requireLogin: false,
+                templateUrl: 'build/views/project-note/remove.html',
+                controller: 'ProjectNoteRemoveController'
+            })
+        .when('/project/:id/files', {
+            //requireLogin: false,
+            templateUrl: 'build/views/project-file/list.html',
+            controller: 'ProjectFileListController'
         })
-        .when('/project/:id/notes/:idNote/show', {
+        .when('/project/:id/files/new', {
             requireLogin: false,
-            templateUrl: 'build/views/project-note/show.html',
-            controller: 'ProjectNoteShowController'
+            templateUrl: 'build/views/project-file/new.html',
+            controller: 'ProjectFileNewController'
         })
-        .when('/project/:id/notes/new', {
+        .when('/project/:id/files/:idFile/edit', {
             requireLogin: false,
-            templateUrl: 'build/views/project-note/new.html',
-            controller: 'ProjectNoteNewController'
+            templateUrl: 'build/views/project-file/edit.html',
+            controller: 'ProjectFileEditController'
         })
-        .when('/project/:id/notes/:idNote/edit', {
+        .when('/project/:id/files/:idFile/remove', {
             requireLogin: false,
-            templateUrl: 'build/views/project-note/edit.html',
-            controller: 'ProjectNoteEditController'
-        })
-        .when('/project/:id/notes/:idNote/remove', {
-            requireLogin: false,
-            templateUrl: 'build/views/project-note/remove.html',
-            controller: 'ProjectNoteRemoveController'
+            templateUrl: 'build/views/project-file/remove.html',
+            controller: 'ProjectFileRemoveController'
         });
 
 
