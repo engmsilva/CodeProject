@@ -25,4 +25,9 @@ class UserController extends Controller
         return $this->repository->find($idUser);
         
     }
+
+    public function index()
+    {
+        return  $this->repository->all();
+    }
 }

@@ -37,7 +37,7 @@ angular.module('app.directives')
 
                 $scope.downloadFile = function () {
                     $scope.$emit('loading');
-                    ProjectFile.download({id: null, idFile: $attrs.idFile}, function (data){
+                    ProjectFile.download({id: $attrs.id, idFile: $attrs.idFile}, function (data){
                         $scope.$emit('salvar-arquivo',data);
 
                     });

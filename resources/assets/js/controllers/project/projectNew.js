@@ -38,7 +38,7 @@ angular.module('app.controllers')
              }).$promise;
          };
 
-         $scope.selectClient = function (item){
+         $scope.selectClient = function (item){             
              $scope.project.client_id = item.id;
          };
     }]);

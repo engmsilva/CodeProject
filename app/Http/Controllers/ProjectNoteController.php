@@ -11,12 +11,15 @@ use Illuminate\Http\Request;
 class ProjectNoteController extends Controller
 {
 
-    private $repository;
-    private $service;
+
     /**
-     * @var AuthCodeProject
+     * @var ProjectNoteRepository
      */
-    private $authCodeProject;
+    private $repository;
+    /**
+     * @var ProjectNoteService
+     */
+    private $service;
 
     /**
      * ProjectNoteController constructor.
@@ -24,89 +27,64 @@ class ProjectNoteController extends Controller
      * @param ProjectNoteService $service
      */
     public function __construct(ProjectNoteRepository $repository,
-                                ProjectNoteService $service,
-                                AuthCodeProject $authCodeProject)
+                                ProjectNoteService $service)
     {
+
         $this->repository = $repository;
         $this->service = $service;
-        $this->authCodeProject = $authCodeProject;
     }
 
+
     /**
+     * @param $id
      * @return mixed
      */
     public function index($id)
-    {
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
-        
+    {       
         return  $this->repository->findWhere(['project_id'=>$id]);
-
-
     }
+
 
     /**
      * @param Request $request
-     * @return mixed
+     * @return array|mixed
      */
     public function store(Request $request)
     {
         $request['project_id'] = $request->id;
-
-        if($this->authCodeProject->checkProjectPermissions($request['project_id'])==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
         return $this->service->create($request->all());
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @param $noteId
-     * @return mixed
-     * @internal param $id
-     */
     public function update(Request $request, $id, $idNote)
     {
-        $request['project_id'] = $id;
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
         return $this->service->update($request->all(), $idNote);
     }
 
+
     /**
      * @param $id
-     * @param $noteId
-     * @return mixed
+     * @param $idNote
+     * @return array|mixed
      */
-    public function show($id, $noteId)
-    {
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
-       $result = $this->service->show($id, $noteId);
+    public function show($id, $idNote)
+    {        
+       $result = $this->service->show($id, $idNote);
         if(isset($result['data']) && count($result['data'])==1){
             $result = [
                 'data' => $result['data'][0]
             ];
         }
-
         return $result;
-
     }
+
 
     /**
      * @param $id
-     * @param $noteId
-     * @return mixed
+     * @param $idNote
+     * @return array
      */
-    public function destroy($id, $idNote)    {
-
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
+    public function destroy($id, $idNote)    
+    {        
         return $this->service->delete($idNote);
     }
 }

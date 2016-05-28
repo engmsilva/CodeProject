@@ -9,15 +9,13 @@
 namespace CodeProject\Transformers;
 
 use CodeProject\Entities\Project;
-use CodeProject\Entities\Client;
-
 use League\Fractal\TransformerAbstract;
 
 
 
 class ProjectTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = ['members','client'];
+    protected $defaultIncludes = ['client'];
     
     public function Transform(Project $project)
     {
@@ -30,6 +28,7 @@ class ProjectTransformer extends TransformerAbstract
             'progress' => (int) $project->progress,
             'status' => $project->status,
             'due_date' => $project->due_date,
+            'isOwner' => $project->owner_id == \Authorizer::getResourceOwnerId()
         ];
     }
 

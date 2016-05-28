@@ -48,13 +48,13 @@ class ProjectNoteService
         }
     }
 
+
     /**
      * @param array $data
-     * @param $id
-     * @param $noteId
+     * @param $idNote
      * @return array|mixed
      */
-    public function update(array $data, $id)
+    public function update(array $data, $idNote)
     {
 
         try {
@@ -62,7 +62,8 @@ class ProjectNoteService
         try {
 
             $this->validator->with($data)->passesOrFail();
-            return $this->repository->update($data, $id);
+
+            return $this->repository->update($data, $idNote);
 
         } catch (ValidatorException $e) {
 
@@ -84,10 +85,10 @@ class ProjectNoteService
      * @param $noteId
      * @return array|mixed
      */
-    public function show($id, $noteId)
+    public function show($id, $idNote)
     {
         try {
-            return $this->repository->findWhere(['project_id'=>$id, 'id'=>$noteId]);
+            return $this->repository->findWhere(['project_id'=>$id, 'id'=>$idNote]);
         } catch (\Exception $e) {
             return [
                 'error' => true,
@@ -102,11 +103,11 @@ class ProjectNoteService
      * @param $noteId
      * @return array
      */
-    public function delete($id)
+    public function delete($idNote)
     {
         try {
-            $noteTitle = $this->repository->skipPresenter()->find($id,['title']);
-            $this->repository->find($id)->delete();
+            $noteTitle = $this->repository->skipPresenter()->find($idNote,['title']);
+            $this->repository->find($idNote)->delete();
             return [
                 'error' => false,
                 'menssage' => 'A anotacao '.$noteTitle['title'].' foi excluida'

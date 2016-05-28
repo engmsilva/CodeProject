@@ -49,25 +49,23 @@ class ProjectFileController extends Controller
 
     public function store(Request $request)
     {
-        $id = $request->id;
 
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
 
         $data['file'] = $file;
         $data['extension'] = $extension;
         $data['name'] = $request->name;
-        $data['id'] = $id;
+        $data['id'] = $request->id;
         $data['description'] = $request->description;
         
         return $this->service->create($data);
     }
 
-    public function downloadFile($idFile)
+    public function downloadFile($id, $idFile)
     {
+
+        
         $filePath = $this->service->getFilePath($idFile);
         $fileContent = file_get_contents($filePath);
         $file64 = base64_encode($fileContent);

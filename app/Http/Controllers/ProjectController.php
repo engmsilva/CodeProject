@@ -40,6 +40,8 @@ class ProjectController extends Controller
         $this->service = $service;
         $this->authorizer = $authorizer;
         $this->authCodeProject = $authCodeProject;
+        $this->middleware('check-project-owner', ['except' => ['index','store','show']]);
+        $this->middleware('check-project-permission', ['except' => ['index','store','update','destroy']]);
     }
 
     /**
@@ -47,35 +49,30 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $userId = $this->authorizer->getResourceOwnerId();
-         return $this->repository->isOwnerMember($userId)->all();
+       $userId = $this->authorizer->getResourceOwnerId();
+       return $this->repository->isOwnerMember($userId)->all();
 
-       //return $this->repository->skipPresenter()->with(['owner', 'client'])->findWhere(['owner_id' => $this->authorizer->getResourceOwnerId()]);
+      // return $this->repository->skipPresenter()->with(['owner', 'client'])->findWhere(['owner_id' => $this->authorizer->getResourceOwnerId()]);
+        
     }
 
     public function members($id)
     {
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
+       
         $project = $this->repository->skipPresenter()->find($id);
         return $project->members;
     }
 
-    public function addMember($id, $idUser)
+    public function addMember($id, $idMember)
     {
-        if($this->authCodeProject->checkProjectOwner($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
-        return $this->service->addMember(['project_id'=>$id,'member_id' => $idUser]);
+        
+        return $this->service->addMember(['project_id'=>$id,'member_id' => $idMember]);
     }
 
-    public function removeMember($id, $idUser)
+    public function removeMember($id, $idMember)
     {
-        if($this->authCodeProject->checkProjectOwner($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
-        return $this->service->removeMember($idUser);
+       
+        return $this->service->removeMember($idMember);
     }
     /**
      * @param Request $request
@@ -83,8 +80,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //$userId = $this->authorizer->getResourceOwnerId();
-        //$request['owner_id'] = $userId;
+
         return $this->service->create($request->all());
     }
 
@@ -95,9 +91,9 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($this->authCodeProject->checkProjectOwner($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
+      //  if($this->authCodeProject->checkProjectOwner($id)==false) {
+      //      return ['erro' => 'Access Forbidden'];
+      //  }
         return $this->service->update($request->all(), $id);
     }
 
@@ -107,9 +103,7 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-       if($this->authCodeProject->checkProjectPermissions($id)==false) {
-           return ['erro' => 'Access Forbidden'];
-       }
+
         return $this->service->show($id);
     }
 
@@ -119,9 +113,7 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        if($this->authCodeProject->checkProjectOwner($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
+
         return $this->service->delete($id);
     }
 

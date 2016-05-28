@@ -35,6 +35,7 @@ class ProjectTaskService
     public function create(array $data)
     {
         try {
+
             $this->validator->with($data)->passesOrFail();
             return $this->repository->create($data);
         } catch (ValidatorException $e) {
@@ -71,10 +72,10 @@ class ProjectTaskService
         }
     }
 
-    public function show($id, $taskId)
+    public function show($id, $idTask)
     {
         try {
-            return $this->repository->findWhere(['project_id'=>$id, 'id'=>$taskId]);
+            return $this->repository->findWhere(['project_id'=>$id, 'id'=>$idTask]);
         } catch (\Exception $e) {
             return [
                 'error' => true,
@@ -84,11 +85,12 @@ class ProjectTaskService
         }
     }
 
-    public function delete($id)
+    public function delete($idTask)
     {
         try {
-            $taskName = $this->repository->find($id);
-            $this->repository->find($id)->delete();
+
+            $taskName = $this->repository->skipPresenter()->find($idTask,['name']);
+            $this->repository->find($idTask)->delete();
             return [
                 'error' => false,
                 'menssage' => 'A tarefa '.$taskName->name.' foi excluida'

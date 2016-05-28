@@ -27,7 +27,11 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::resource('client','ClientController', ['except' => ['create','edit']]);
 
-        Route::group(['prefix' => 'project'], function(){
+        Route::resource('project','ProjectController', ['except' => ['create','edit']]);
+
+        Route::resource('project.member','ProjectMemberController', ['except' => ['create','edit','update']]);
+
+        Route::group(['middleware' => 'check-project-permission','prefix' => 'project'], function(){
 
             Route::get('{id}/note','ProjectNoteController@index');
             Route::post('{id}/note','ProjectNoteController@store');
@@ -36,8 +40,8 @@ Route::group(['middleware' => ['web']], function () {
             Route::delete('{id}/note/{idNote}','ProjectNoteController@destroy');
 
             Route::get('{id}/members','ProjectController@members');
-            Route::post('{id}/member/{idUser}','ProjectController@addMember');
-            Route::delete('{id}/member/{idUser}','ProjectController@removeMember');
+            Route::post('{id}/member/{idMember}','ProjectController@addMember');
+            Route::delete('{id}/member/{idMember}','ProjectController@removeMember');
 
             Route::get('{id}/task','ProjectTaskController@index');
             Route::post('{id}/task','ProjectTaskController@store');
@@ -46,7 +50,7 @@ Route::group(['middleware' => ['web']], function () {
             Route::delete('{id}/task/{idTask}','ProjectTaskController@destroy');
 
             Route::get('{id}/file','ProjectFileController@index');
-            Route::get('file/{idFile}/download','ProjectFileController@downloadFile');
+            Route::get('{id}/file/{idFile}/download','ProjectFileController@downloadFile');
             Route::post('{id}/file','ProjectFileController@store');
             Route::get('{id}/file/{idFile}','ProjectFileController@show');
             Route::put('{id}/file/{idFile}','ProjectFileController@update');
@@ -55,12 +59,7 @@ Route::group(['middleware' => ['web']], function () {
         });
 
         Route::get('user/authenticated','UserController@authenticated');
-
-        //route::group(['middleware'=>'CheckProjectOwner'], function(){
-
-        Route::resource('project','ProjectController', ['except' => ['create','edit']]);
-
-       // });
+        Route::resource('user','UserController', ['except' => ['create','edit']]);
 
     });
 

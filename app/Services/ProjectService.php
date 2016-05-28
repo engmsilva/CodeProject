@@ -81,11 +81,11 @@ class ProjectService
         }
     }
 
-    public function removeMember($idUser)
+    public function removeMember($idMember)
     {
         try
         {
-            $member = $this->memberRepository->find($idUser);
+            $member = $this->memberRepository->find($idMember);
             $this->memberRepository->find($member->id)->delete();
             return [
                 'error' => false,

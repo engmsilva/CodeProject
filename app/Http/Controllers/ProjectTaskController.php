@@ -2,7 +2,6 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Http\Controllers\Auth\AuthCodeProject;
 use CodeProject\Repositories\ProjectTaskRepository;
 use CodeProject\Services\ProjectTaskService;
 use Illuminate\Http\Request;
@@ -11,6 +10,8 @@ use CodeProject\Http\Requests;
 
 class ProjectTaskController extends Controller
 {
+
+
     /**
      * @var ProjectTaskRepository
      */
@@ -19,58 +20,73 @@ class ProjectTaskController extends Controller
      * @var ProjectTaskService
      */
     private $service;
+
     /**
-     * @var AuthCodeProject
+     * ProjectTaskController constructor.
+     * @param ProjectTaskRepository $repository
+     * @param ProjectTaskService $service
      */
-    private $authCodeProject;
-
-    public function __construct(ProjectTaskRepository $repository, ProjectTaskService $service, AuthCodeProject $authCodeProject)
+    public function __construct(ProjectTaskRepository $repository, ProjectTaskService $service)
     {
-
         $this->repository = $repository;
         $this->service = $service;
-        $this->authCodeProject = $authCodeProject;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function index($id)
     {
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
         return $this->repository->findWhere(['project_id'=>$id]);
     }
 
+    /**
+     * @param Request $request
+     * @return array|mixed
+     */
     public function store(Request $request)
     {
-        $request['project_id'] = $request->id;
 
-        if($this->authCodeProject->checkProjectPermissions($request['project_id'])==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
+        $request['project_id'] = $request->id;        
+        
         return $this->service->create($request->all());
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @param $idTask
+     * @return array|mixed
+     */
     public function update(Request $request, $id, $idTask)
     {
-        $request['project_id'] = $id;
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
         return $this->service->update($request->all(), $idTask);
     }
 
-    public function show($id, $taskId)
+    /**
+     * @param $id
+     * @param $idTask
+     * @return array|mixed
+     */
+    public function show($id, $idTask)
     {
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
+        $result = $this->service->show($id, $idTask);
+        if(isset($result['data']) && count($result['data'])==1){
+            $result = [
+                'data' => $result['data'][0]
+            ];
         }
-        return $this->service->show($id, $taskId);
+        return $result;
     }
-    public function destroy($id, $idTask)    {
 
-        if($this->authCodeProject->checkProjectPermissions($id)==false) {
-            return ['erro' => 'Access Forbidden'];
-        }
+    /**
+     * @param $id
+     * @param $idTask
+     * @return array
+     */
+    public function destroy($id, $idTask)
+    {
         return $this->service->delete($idTask);
     }
 }

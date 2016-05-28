@@ -3,26 +3,21 @@
 namespace CodeProject\Http\Middleware;
 
 use Closure;
-use CodeProject\Repositories\ProjectRepository;
-use LucaDegasperi\OAuth2Server\Authorizer;
+use CodeProject\Http\Controllers\Auth\AuthCodeProject;
 
 class CheckProjectOwner
 {
 
-    /**
-     * @var Authorizer
-     */
-    private $authorizer;
-    /**
-     * @var ProjectRepository
-     */
-    private $repository;
 
-    public function __construct(ProjectRepository $repository, Authorizer $authorizer)
+    /**
+     * @var AuthCodeProject
+     */
+    private $authCodeProject;
+
+    public function __construct(AuthCodeProject $authCodeProject)
     {
-        $this->authorizer = $authorizer;
 
-        $this->repository = $repository;
+        $this->authCodeProject = $authCodeProject;
     }
 
     /**
@@ -34,15 +29,11 @@ class CheckProjectOwner
      */
     public function handle($request, Closure $next)
     {
-        $userId =  $this->authorizer->getResourceOwnerId();
-        $projectId = $request->project;
+        $project_id = $request->route('id') ? $request->route('id') : $request->route('project');
 
-        if($this->repository->isOwner($projectId, $userId) == false)
+        if($this->authCodeProject->checkProjectOwner($project_id)== false)
         {
-            return response([
-                'error' => true,
-                'menssage' => 'Suas credenciais não permite acessar esse projeto'
-            ]);
+            return ['error' => 'Access Forbidden'];
         }
 
         return $next($request);

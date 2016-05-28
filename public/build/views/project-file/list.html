@@ -20,13 +20,13 @@
                            <td>{{o.name}}</td>
                            <td>{{o.description | limitTo: 30}}...</td>
                            <td>
-                               <project-file-download id-file="{{o.idFile}}"></project-file-download>
+                               <project-file-download id="{{o.id}}" id-file="{{o.idFile}}"></project-file-download>
                            </td>
                            <td>
-                               <a ng-href="#/project/{{o.id}}/files/{{o.idFile}}/edit">
+                               <a ng-href="#/project/{{o.id}}/file/{{o.idFile}}/edit">
                                    Editar
                                </a>
-                               <a ng-href="#/project/{{o.id}}/files/{{o.idFile}}/remove">
+                               <a ng-href="#/project/{{o.id}}/file/{{o.idFile}}/remove">
                                    Excluir
                                </a>
                            </td>
