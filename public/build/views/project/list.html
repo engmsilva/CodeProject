@@ -23,7 +23,8 @@
                        </tr>
                        </thead>
                        <tbody>
-                       <tr ng-repeat="o in projects">
+                       <tr dir-paginate="o in projects | itemsPerPage: projectsPerPage"
+                           total-items="totalProjects" current-page="pagination.current">
                            <td>
                                <span class="glyphicon glyphicon-user" ng-show="{{o.isOwner}}"></span>
                            </td>
@@ -43,6 +44,7 @@
                        </tr>
                        </tbody>
                    </table>
+                    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
                 </div>
             </div>
 

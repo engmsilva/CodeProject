@@ -33,6 +33,10 @@ angular.module('app.services')
                 }
 
             },
+            
+            query: {
+              isArray: false  
+            },
 
             update: {
                method: 'PUT',

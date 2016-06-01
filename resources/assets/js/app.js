@@ -1,6 +1,8 @@
 var app = angular.module(
     'app',['ngRoute','angular-oauth2','app.controllers','app.services','app.filters','app.directives',
-            'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ngFileUpload'
+            'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ui.bootstrap.modal',
+        'ngFileUpload','http-auth-interceptor','angularUtils.directives.dirPagination','mgcrea.ngStrap.navbar',
+        'ui.bootstrap.dropdown'
     ]);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
@@ -67,6 +69,11 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
         $httpProvider.defaults.transformRequest = appConfigProvider.config.utils.transformRequest;
 
         $httpProvider.defaults.transformResponse = appConfigProvider.config.utils.transformResponse;
+
+        $httpProvider.interceptors.splice(0,1);
+        $httpProvider.interceptors.splice(0,1);
+
+        $httpProvider.interceptors.push('oauthFixInterceptor');
         
         $routeProvider
        .when('/login',{
@@ -74,129 +81,158 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
            templateUrl: 'build/views/login.html',
            controller: 'LoginController'
        })
+            .when('/logout',{
+                requireLogin: false,
+                resolve: {
+                    logout: ['$location', 'OAuthToken', function ($location, OAuthToken) {
+                        OAuthToken.removeToken();
+                        return $location.path('/login');
+                    }]
+                }
+            })
        .when('/home', {
            requireLogin: true,
            templateUrl: 'build/views/home.html',
-           controller: 'HomeController'
+           controller: 'HomeController',
+           title: 'Home'
        })
-           .when('/clients',{
+            .when('/clients/dashboard',{
+                requireLogin: true,
+                templateUrl: 'build/views/client/dashboard.html',
+                controller: 'ClientDashboardController',
+                title: 'Clientes'
+            })
+            .when('/clients',{
                requireLogin: true,
                templateUrl: 'build/views/client/list.html',
-               controller: 'ClientListController'
+               controller: 'ClientListController',
+               title: 'Clientes'
            })
            .when('/client/new', {
                requireLogin: true,
                templateUrl: 'build/views/client/new.html',
-               controller: 'ClientNewController'
+               controller: 'ClientNewController',
+               title: 'Clientes'
            })
            .when('/client/:id/edit', {
                requireLogin: true,
                templateUrl: 'build/views/client/edit.html',
-               controller: 'ClientEditController'
+               controller: 'ClientEditController',
+               title: 'Clientes'
            })
            .when('/client/:id/remove', {
                requireLogin: true,
                templateUrl: 'build/views/client/remove.html',
-               controller: 'ClientRemoveController'
+               controller: 'ClientRemoveController',
+               title: 'Clientes'
            })
         .when('/projects', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project/list.html',
-            controller: 'ProjectListController'
+            controller: 'ProjectListController',
+            title: 'Projetos'
         })
         .when('/project/new', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project/new.html',
-            controller: 'ProjectNewController'
+            controller: 'ProjectNewController',
+            title: 'Projetos'
         })
         .when('/project/:id/edit', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project/edit.html',
-            controller: 'ProjectEditController'
+            controller: 'ProjectEditController',
+            title: 'Projetos'
         })
         .when('/project/:id/remove', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project/remove.html',
-            controller: 'ProjectRemoveController'
+            controller: 'ProjectRemoveController',
+            title: 'Projetos'
         })
             .when('/project/:id/notes', {
-                requireLogin: false,
+                requireLogin: true,
                 templateUrl: 'build/views/project-note/list.html',
-                controller: 'ProjectNoteListController'
+                controller: 'ProjectNoteListController',
+                title: 'Projetos'
             })
             .when('/project/:id/note/:idNote/show', {
-                requireLogin: false,
+                requireLogin: true,
                 templateUrl: 'build/views/project-note/show.html',
-                controller: 'ProjectNoteShowController'
+                controller: 'ProjectNoteShowController',
+                title: 'Projetos'
             })
             .when('/project/:id/note/new', {
-                requireLogin: false,
+                requireLogin: true,
                 templateUrl: 'build/views/project-note/new.html',
-                controller: 'ProjectNoteNewController'
+                controller: 'ProjectNoteNewController',
+                title: 'Projetos'
             })
             .when('/project/:id/note/:idNote/edit', {
-                requireLogin: false,
+                requireLogin: true,
                 templateUrl: 'build/views/project-note/edit.html',
-                controller: 'ProjectNoteEditController'
+                controller: 'ProjectNoteEditController',
+                title: 'Projetos'
             })
             .when('/project/:id/note/:idNote/remove', {
-                requireLogin: false,
+                requireLogin: true,
                 templateUrl: 'build/views/project-note/remove.html',
-                controller: 'ProjectNoteRemoveController'
+                controller: 'ProjectNoteRemoveController',
+                title: 'Projetos'
             })
 
         .when('/project/:id/tasks', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-task/list.html',
             controller: 'ProjectTaskListController'
         })
         .when('/project/:id/task/:idTask/show', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-task/show.html',
             controller: 'ProjectTaskShowController'
         })
         .when('/project/:id/task/new', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-task/new.html',
             controller: 'ProjectTaskNewController'
         })
         .when('/project/:id/task/:idTask/edit', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-task/edit.html',
             controller: 'ProjectTaskEditController'
         })
         .when('/project/:id/task/:idTask/remove', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-task/remove.html',
             controller: 'ProjectTaskRemoveController'
         })
             .when('/project/:id/members', {
-                requireLogin: false,
+                requireLogin: true,
                 templateUrl: 'build/views/project-member/list.html',
                 controller: 'ProjectMemberListController'
             })
             .when('/project/:id/member/:idMember/remove', {
-                requireLogin: false,
+                requireLogin: true,
                 templateUrl: 'build/views/project-member/remove.html',
                 controller: 'ProjectMemberRemoveController'
             })
         .when('/project/:id/files', {
-            //requireLogin: false,
+            //requireLogin: true,
             templateUrl: 'build/views/project-file/list.html',
             controller: 'ProjectFileListController'
         })
         .when('/project/:id/file/new', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-file/new.html',
             controller: 'ProjectFileNewController'
         })
         .when('/project/:id/file/:idFile/edit', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-file/edit.html',
             controller: 'ProjectFileEditController'
         })
         .when('/project/:id/file/:idFile/remove', {
-            requireLogin: false,
+            requireLogin: true,
             templateUrl: 'build/views/project-file/remove.html',
             controller: 'ProjectFileRemoveController'
         });
@@ -219,35 +255,52 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
         });
 }]);
 
-app.run(['$rootScope','$window','$route','$location','OAuth', function($rootScope,$window,$route,$location,OAuth) {
-    $rootScope.$on('oauth:error', function(event, rejection) {
+app.run(['$rootScope','$route','$location','$http','$modal','$cookies','httpBuffer','OAuth',
+    function($rootScope,$route,$location,$http,$modal,$cookies,httpBuffer,OAuth) {
+
+        $rootScope.$on('$routeChangeStart', function(event, next, current) {
+
+            var requireLogin = next.requireLogin;
+
+            $rootScope.loginModalOpened = false;
+
+            if(next.$$route.originalPath != "/login") {
+                if(!OAuth.isAuthenticated()){
+                    return $location.path('/login');
+                }
+            }
+        });
+
+        $rootScope.$on('$routeChangeSuccess', function(event, next, current) {
+            $rootScope.pageTitle = next.$$route.title;
+
+        });
+
+    $rootScope.$on('oauth:error', function(event, data) {
         // Ignore `invalid_grant` error - should be catched on `LoginController`.
-        if ('invalid_grant' === rejection.data.error) {
+        if ('invalid_grant' === data.rejection.data.error) {
             return;
         }
 
         // Refresh token when a `invalid_token` error occurs.
-        if ('invalid_token' === rejection.data.error) {
-            return OAuth.getRefreshToken();
+        if ('access_denied' === data.rejection.data.error) {
+            httpBuffer.append(data.rejection.config, data.deferred);
+            if(!$rootScope.loginModalOpened){
+                var modalInstance = $modal.open({
+                    templateUrl: 'build/views/templates/loginModal.html',
+                    controller: 'LoginModalController'
+                });
+                $rootScope.loginModalOpened = true;
+
+            }
+            return;
         }
 
         // Redirect to `/login` with the `error_reason`.
         $location.path('/login');
-        console.log(rejection.data.error);
-       //return $window.location.href = '/login?error_reason=' + rejection.data.error;
     });
 
-    $rootScope.$on('$routeChangeStart', function(ev, next, current) {
 
-        var requireLogin = next.requireLogin;
-
-        if(requireLogin) { //
-            if(!OAuth.isAuthenticated()){
-               $location.path('/login');
-                console.log('Acesso Negado!');
-            }
-        }
-    });
     
 
 }]);

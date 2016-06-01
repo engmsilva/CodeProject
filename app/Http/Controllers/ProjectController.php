@@ -47,33 +47,15 @@ class ProjectController extends Controller
     /**
      * @return mixed
      */
-    public function index()
+    public function index(Request $request)
     {
-       $userId = $this->authorizer->getResourceOwnerId();
-       return $this->repository->isOwnerMember($userId)->all();
-
+       $idUser = $this->authorizer->getResourceOwnerId();
+       $limit = $request->query->get('limit');
+       //return $this->repository->isOwnerMember($idUser )->all();  
       // return $this->repository->skipPresenter()->with(['owner', 'client'])->findWhere(['owner_id' => $this->authorizer->getResourceOwnerId()]);
-        
+        return $this->repository->findOwner($idUser,$limit);        
     }
 
-    public function members($id)
-    {
-       
-        $project = $this->repository->skipPresenter()->find($id);
-        return $project->members;
-    }
-
-    public function addMember($id, $idMember)
-    {
-        
-        return $this->service->addMember(['project_id'=>$id,'member_id' => $idMember]);
-    }
-
-    public function removeMember($id, $idMember)
-    {
-       
-        return $this->service->removeMember($idMember);
-    }
     /**
      * @param Request $request
      * @return mixed
