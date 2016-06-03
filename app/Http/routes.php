@@ -39,10 +39,6 @@ Route::group(['middleware' => ['web']], function () {
             Route::put('{id}/note/{idNote}','ProjectNoteController@update');
             Route::delete('{id}/note/{idNote}','ProjectNoteController@destroy');
 
-            Route::get('{id}/members','ProjectController@members');
-            Route::post('{id}/member/{idMember}','ProjectController@addMember');
-            Route::delete('{id}/member/{idMember}','ProjectController@removeMember');
-
             Route::get('{id}/task','ProjectTaskController@index');
             Route::post('{id}/task','ProjectTaskController@store');
             Route::put('{id}/task/{idTask}','ProjectTaskController@update');
